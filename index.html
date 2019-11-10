@@ -1,0 +1,45 @@
+<!DOCTYPE html> 
+<html> 
+<head> 
+<title>File manager</title> 
+<meta charset="utf-8"> 
+	<script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+</head> 
+<body> 
+<form> 
+<input type="text" id="name"> 
+</form> 
+
+<div class="tree-list">
+</div>
+<script>
+	data = JSON.parse('{{json|safe}}');
+	console.log(data);
+	var dirpath = '{{current_directory}}';
+	console.log(dirpath);
+	$("form").append("<a id='createLink' href='/create?d="+data.path+"'>Create New Folder</a>");
+	$("#createLink").click(function(){ 
+		$(this).attr("href","create?d="+data.path+"/"+document.getElementById('name').value);
+	}); 
+
+	function printWorkingDirectory(dir) {
+		if (dir.type == "directory") {
+            dir.children.forEach(function(elem) {
+                if(elem.type == "folder") {
+                	$(".tree-list").append("<li><a href='/?d="+data.path+"/"+elem.name+"'>"+elem.name+" </a><a href='/delete?d="+dir.path+"/"+elem.name+"'>Delete</a></li>");
+                } else {
+                	$(".tree-list").append("<li><a href='/?d="+data.path+"/"+elem.name+"'>"+elem.name+" </a></li>");
+                }
+            });
+		} else {
+		    $(location).attr('href', 'http://127.0.0.1:5000/download?d='+data.path);
+		}
+	} 
+	printWorkingDirectory(data);
+</script> 
+</body>
+
+
